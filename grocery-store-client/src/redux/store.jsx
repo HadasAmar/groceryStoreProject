@@ -1,12 +1,15 @@
-import { combineReducers, createStore } from "redux";
-import { dataOrderReducer } from "./reducer/orderReducer";
-import { dataSupplierReducer } from "./reducer/supplierReducer";
+import { configureStore } from "@reduxjs/toolkit";
+import orderReducer from "./reducer/orderReducer";  
+import supplierReducer from "./reducer/supplierReducer";  
 
 
-const reducer = combineReducers({
-   dataOrderReducer,
-   dataSupplierReducer
+export const mystore = configureStore({
+   reducer: {
+       dataOrder: orderReducer,
+       dataSupplier: supplierReducer
+   }
 });
 
-export const mystore = createStore(reducer);
-window.store = mystore;
+console.log("Redux Store:", mystore.getState());
+
+

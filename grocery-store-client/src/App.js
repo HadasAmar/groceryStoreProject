@@ -1,21 +1,25 @@
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter } from 'react-router-dom';
-import { Nav } from './components/nav';
-import { Routing } from './components/routing';
-import { Provider } from 'react-redux';
-import { mystore } from './redux/store';
-import { Login } from './components/login';
+// import { QueryClient, QueryClientProvider } from 'react-query';  // ייבוא של React Query
+
+import Navbar from './components/Navbar';
+import Routing from './routes/Routing';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+
+// יצירת ה-query client
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <div className="App">
-      <Provider store={mystore}>
-      <BrowserRouter>
-      <Nav></Nav>
-      <Routing></Routing>
-      </BrowserRouter>
-      </Provider>
+      <QueryClientProvider client={queryClient}>  {/* עטיפת האפליקציה ב-QueryClientProvider */}
+        <BrowserRouter>
+          <Navbar />
+          <Routing />
+        </BrowserRouter>
+      </QueryClientProvider>
     </div>
   );
 }

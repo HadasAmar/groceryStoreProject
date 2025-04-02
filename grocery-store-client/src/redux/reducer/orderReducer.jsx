@@ -1,36 +1,20 @@
-import { produce } from 'immer'
+// import { ADD_ORDER, LOAD_ORDERS } from "../actions/orderAction";
 
-export const games = {
-    listOrders: [
+const initialState = {
+    listOrders: []
+};
 
-    ]
-}
-
-export const dataOrderReducer = produce((state, action) => {
+const orderReducer = (state = initialState, action) => {
     switch (action.type) {
-        case "LOAD_GAMES":
-            state.listGames = action.payload
-            return;
+        // case LOAD_ORDERS:
+        //     return { ...state, listOrders: action.payload };
 
-        case "ADD_GAME":
-            state.listGames.push(action.payload);
-            break;
-
-        case "DELETE_GAME":
-            return {
-                ...state,
-                listGames: state.listGames.filter(x => x._id != action.payload)
-            };
-
-        case "UPDATE_GAME": {
-            const index = state.listGames.findIndex(game => game._id == action.payload._id);
-            state.listGames[index] = { ...state.listGames[index], ...action.payload };
-            break;
-        }
+        // case ADD_ORDER:
+        //     return { ...state, listOrders: [...state.listOrders, action.payload] };
 
         default:
-            break;
-
-
+            return state;
     }
-}, orders)
+};
+
+export default orderReducer;

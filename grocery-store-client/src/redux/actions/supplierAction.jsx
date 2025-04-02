@@ -1,11 +1,12 @@
-export const load_customers=(item)=>{
-    return {type:"LOAD_CUSTOMERS",payload:item}
-}
+export const ADD_SUPPLIER = "ADD_SUPPLIER";
+export const LOAD_SUPPLIERS = "LOAD_SUPPLIERS";
 
-export const add_customer=(item)=>{
-    return {type:"ADD_CUSTOMER",payload:item}
-}
+export const add_supplier = (supplier) => ({
+    type: ADD_SUPPLIER,
+    payload: supplier
+});
 
-export const update_user=(item)=>{
-    return {type:"UPDATE_USER",payload:item}
-}
+export const load_suppliers = (suppliers) => ({
+    type: LOAD_SUPPLIERS,
+    payload: suppliers
+});
