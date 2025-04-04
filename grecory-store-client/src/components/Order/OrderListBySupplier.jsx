@@ -4,6 +4,8 @@ import { getOrdersBySupplierApi, updateOrderStatusApi } from "../../api/orderApi
 import "../../styles/OrderListBySupplier.css"; // Import CSS for styling
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { jwtDecode } from "jwt-decode";
+
 
 const SupplierOrders = () => {
 
@@ -18,9 +20,12 @@ const SupplierOrders = () => {
         }
     }, [token, navigate]);
 
-    // שימוש ב-useQuery כדי לשלוף את ההזמנות
+    const decodedToken = jwtDecode(token);  // פענוח ה-TOKEN
+    const supplierId = decodedToken._id;  // תחליף את זה לשם המפתח הנכון    // שימוש ב-useQuery כדי לשלוף את ההזמנות
     const { data: orders, error, isLoading, refetch } = useQuery({
-        queryKey: ['orders', token],
+        queryKey: ['orders', supplierId],
+        refetchInterval: 60000, 
+        refetchOnWindowFocus: true,
         queryFn: () => {
             const response = getOrdersBySupplierApi(token);
             console.log("what orders", response); // בדוק את התגובה מה-API
@@ -45,7 +50,7 @@ const SupplierOrders = () => {
     const handleStartProcessingOrder = async (orderId, status) => {
         try {
             // עדכון סטטוס ההזמנה
-            await mutation.mutateAsync(orderId, status); // שליחה של שני פרמטרים
+            await mutation.mutateAsync({orderId, status, token}); // שליחה של שני פרמטרים
         } catch (error) {
             setMessage("Error starting order processing: " + error.message);
         }

@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { createOrderApi } from "../../api/orderApi";
 import { getSuppliersApi } from "../../api/supplierApi";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import "../../styles/ProductList.css"; // ייבוא קובץ CSS לעיצוב
 import { useNavigate } from "react-router-dom";
 
 const ProductList = () => {
+    const queryClient = useQueryClient(); // קבלת ה-queryClient
     const [selectedSupplier, setSelectedSupplier] = useState("");
     const [products, setProducts] = useState([]);
     const [orderItems, setOrderItems] = useState([]);
@@ -21,8 +22,9 @@ const ProductList = () => {
         }, [token, navigate]);
     // שימוש ב-useQuery כדי לקבל את הספקים
     const { data: suppliers, error, isLoading } = useQuery({
-        queryKey: ['suppliers',token],
-        staleTime: Infinity, // הנתונים לעולם לא ייחשבו "ישנים"
+        queryKey: ['suppliers'],
+        refetchOnWindowFocus: true,
+        refetchInterval: 60000, 
         queryFn: () => {
                     const response = getSuppliersApi(token);
                     console.log("what product owner", response); // בדוק את התגובה מה-API
@@ -70,6 +72,7 @@ const ProductList = () => {
     const mutation = useMutation({
         mutationFn: createOrderApi,
         onSuccess: () => {
+            queryClient.invalidateQueries(['storeOwnerOrders']); // מעדכן את רשימת ההזמנות של הספק
             setMessage("הזמנה נוספה בהצלחה!");
         },
         onError: (error) => {
@@ -110,7 +113,8 @@ const ProductList = () => {
 
         try {
             console.log("Order data:", orderData); // הוספת לוג
-            await mutation.mutateAsync(orderData); // שליחה בעזרת useMutation
+            console.log("Token in try:", token); // הוספת לוג
+            await mutation.mutateAsync({ orderData, token }); // שליחה בעזרת useMutation
 
         } catch (error) {
             setMessage("שגיאה ביצירת ההזמנה: " + error.message);

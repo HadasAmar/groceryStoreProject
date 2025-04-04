@@ -7,6 +7,7 @@ import OrderListByOwner from "../components/Order/OrderListByOwner";
 import SupplierRegister from "../pages/Auth/SupplierRegister";
 import SupplierLogin from "../pages/Auth/SupplierLogin";
 import OwnerLogin from "../pages/Auth/OwnerLogin";
+import AddProduct from "../components/Product/addProduct";
 
 const Routing = () => {
     return (
@@ -19,6 +20,7 @@ const Routing = () => {
                 <Route path="/ordersBySupplier" element={<OrdersListBySupplier />} />
                 <Route path="/ordersByOwner" element={<OrderListByOwner />} />
                 <Route path="/products" element={<ProductList />} />
+                <Route path="/addProduct" element={<AddProduct />} />
             </Routes>
     );
 };

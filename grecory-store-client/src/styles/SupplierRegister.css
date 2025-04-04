@@ -54,6 +54,7 @@
 }
 
 .status-message {
+    color: red;
     text-align: center;
     margin-top: 15px;
     font-size: 14px;

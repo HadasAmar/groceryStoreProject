@@ -17,6 +17,8 @@ const SupplierLogin = () => {
       // Success callback - אחרי התחברות מוצלחת
       alert("Login successful! Token: " + response.token);
       localStorage.setItem("token", response.token); // שומר את הטוקן ב-localStorage
+      localStorage.setItem("role", "supplier"); // שומר את סוג המשתמש ב-localStorage
+
       // הפנייה לדף אחר אחרי ההתחברות
       // navigate("/dashboard");
     },

@@ -22,3 +22,18 @@ nav {
     color: #ddd;
   }
 
+  .logout-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 5px;
+  }
+  
+  .logout-btn:hover {
+    color: #ddd;
+  }
+  
+

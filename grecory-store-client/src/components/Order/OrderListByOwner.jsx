@@ -19,7 +19,9 @@ const StoreOwnerOrders = () => {
 
     // שימוש ב-useQuery לשליפת הזמנות
     const { data: orders, error, isLoading, refetch } = useQuery({
-        queryKey: ['storeOwnerOrders', token],
+        queryKey: ['storeOwnerOrders'],
+        refetchInterval: 60000, 
+        refetchOnWindowFocus: true,
         queryFn: () => {
             const response = getOrdersByStoreOwnerApi(token);
             console.log("what orders owner", response); // בדוק את התגובה מה-API
@@ -31,7 +33,8 @@ const StoreOwnerOrders = () => {
     // שימוש ב-useMutation לעדכון סטטוס ההזמנה
     const mutation = useMutation({
         mutationFn: completeOrderApi, // הפונקציה לעדכון הסטטוס
-        onSuccess: () => {
+        onSuccess: (_, variables) => {
+            const supplierId = variables; // קבלת ה-supplierId מהפרמטרים
             setMessage("ההזמנה הושלמה בהצלחה!");
             refetch(); // לאחר השינוי בסטטוס, נרצה לשלוף את ההזמנות מחדש
         },
@@ -42,7 +45,7 @@ const StoreOwnerOrders = () => {
 
     const handleCompleteOrder = async (orderId, status) => {
         try {
-            await mutation.mutateAsync(orderId, status); // שליחה לעדכון סטטוס ההזמנה
+            await mutation.mutateAsync({orderId, status, token}); // שליחה לעדכון סטטוס ההזמנה
         } catch (error) {
             setMessage("Error completing order: " + error.message);
         }
@@ -75,7 +78,7 @@ const StoreOwnerOrders = () => {
                                 {order.status === "בתהליך" && (
                                     <button
                                         className="complete-btn"
-                                        onClick={() => handleCompleteOrder(order._id, "הושלמה")}
+                                        onClick={() => handleCompleteOrder(order._id, "הושלמה", order.supplierId)}
                                     >
                                         Complete Order
                                     </button>

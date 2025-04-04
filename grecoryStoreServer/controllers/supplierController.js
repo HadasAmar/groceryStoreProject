@@ -7,8 +7,13 @@ export const registerSupplier = async (req, res) => {
     console.log(req.body);
 
     const { companyName, phoneNumber, representativeName, password, products } = req.body;
+    const existingSupplier = await Supplier.findOne({ phoneNumber });
+    if (existingSupplier) {
+        return res.status(400).json({ message: "מספר הטלפון כבר רשום במערכת" });
+    }
 
     try {
+
         // יצירת ספק עם רשימת המוצרים ישירות בתוך המסמך
         const newSupplier = new Supplier({
             companyName,

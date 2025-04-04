@@ -17,6 +17,8 @@ const OwnerLogin = () => {
       // Success callback - אחרי התחברות מוצלחת
       alert("Login successful! Token: " + response.token);
       localStorage.setItem("token", response.token); // שומר את הטוקן ב-localStorage
+      localStorage.setItem("role", "owner"); // שומר את סוג המשתמש ב-localStorage
+
     },
     onError: (error) => {
       // Error callback - אם יש טעות

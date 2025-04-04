@@ -31,21 +31,65 @@ export const getOrdersByStoreOwnerApi = async (token) => {
     }
 };
 
+// פונקציה ליצירת הזמנה חדשה
+export const createOrderApi = async ({ orderData, token }) => {
+    try {
+        console.log("token",token); // הוספת לוג
+        const response = await axios.post(`${API_URL}/newOrder`,
+            orderData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error creating order:", error); // הוספת לוג
+        throw error; // זורק את השגיאה כדי לטפל בה בהמשך
+    };
+}
+
 // פונקציה לעדכון סטטוס ההזמנה של ספק
-export const updateOrderStatusApi = async (orderId, status) => {
-    console.log("orderId", orderId," status", status); // הוספת לוג
-    const response = await axios.put(`${API_URL}/confirm/${orderId}`, { status });
-    return response.data;
+export const updateOrderStatusApi = async ({orderId, status, token}) => {
+    try {
+        console.log("orderId:", orderId, "status:", status, "token:", token); // הוספת לוג
+        const response = await axios.put(
+            `${API_URL}/confirm/${orderId}`,
+            { status }, // גוף הבקשה
+            {
+                headers: {
+                    Authorization: `Bearer ${token}` // הוספת הטוקן לכותרת
+                }
+            }
+        );
+        return response.data; // החזרת התגובה במקרה של הצלחה
+    } catch (error) {
+        console.error("שגיאה בעדכון סטטוס ההזמנה:", error); // הדפסת שגיאה לקונסול
+        throw error; // זריקת השגיאה כדי שהקריאה לפונקציה תוכל לטפל בה
+    }
 };
+
 
 // פונקציה לעדכון סטטוס הזמנה של בעל מכולת לאחר קבלת סחורה
-export const completeOrderApi = async (orderId) => {
-    const response = await axios.put(`${API_URL}/complete/${orderId}`);
-    return response.data;
+export const completeOrderApi = async ({orderId, status, token}) => {
+    try {
+        console.log("Completing order:", orderId, "token:", token);
+        const response = await axios.put(
+            `${API_URL}/complete/${orderId}`,
+            {status},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error completing order:", error);
+        throw error;
+    }
 };
 
-// פונקציה ליצירת הזמנה חדשה
-export const createOrderApi = async (orderData) => {
-    const response = await axios.post(`${API_URL}/newOrder`, orderData);
-    return response.data;
-};
+
+
