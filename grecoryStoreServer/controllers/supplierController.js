@@ -14,13 +14,12 @@ export const registerSupplier = async (req, res) => {
 
     try {
 
-        // יצירת ספק עם רשימת המוצרים ישירות בתוך המסמך
         const newSupplier = new Supplier({
             companyName,
             phoneNumber,
             representativeName,
             password,
-            products  // כאן זה נשמר ישירות בתוך הספק
+            products  
         });
 
         await newSupplier.save();
@@ -40,7 +39,7 @@ export const loginSupplier = async (req, res) => {
     try {
         const supplier = await Supplier.findOne({ phoneNumber });
         if (!supplier || supplier.password !== password) {
-            return res.status(400).json({ message: "Invalid credentials" });
+            return res.status(400).json({ message: "אחד הפרטים שגויים, נסה שוב" });
         }
         const token = jwt.sign({ id: supplier._id, role: "supplier" }, process.env.JWT_SECRET, { expiresIn: "24h" });
         res.status(200).json({ token });

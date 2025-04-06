@@ -10,28 +10,18 @@ const SupplierLogin = () => {
     password: ""
   });
 
-  // useMutation עם useMutation של הגרסה החדשה
   const mutation = useMutation({
-    mutationFn: loginSupplierApi,  // כאן תכניס את הפונקציה שמבצעת את הקריאה ל-API
+    mutationFn: loginSupplierApi,  
     onSuccess: (response) => {
-      // Success callback - אחרי התחברות מוצלחת
-      alert("Login successful! Token: " + response.token);
-      localStorage.setItem("token", response.token); // שומר את הטוקן ב-localStorage
-      localStorage.setItem("role", "supplier"); // שומר את סוג המשתמש ב-localStorage
+      localStorage.setItem("token", response.token); 
+      localStorage.setItem("role", "supplier"); 
       window.location.href = "/ordersBySupplier";
-
-      // הפנייה לדף אחר אחרי ההתחברות
-      // navigate("/dashboard");
     },
-    onError: (error) => {
-      // Error callback - אם יש טעות
-      alert("Error: " + error.message);
-    }
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutation.mutate(formData); // שולח את הנתונים ל-API
+    mutation.mutate(formData); 
   };
 
   return (
@@ -69,8 +59,7 @@ const SupplierLogin = () => {
           <Link className="to-register" to="/SupplierRegister"> עדיין לא רשום? הרשם כאן</Link>
         </form>
 
-        {mutation.isLoading && <p className="loading-text">טוען...</p>}
-        {mutation.isError && <p className="error-text">שגיאה: {mutation.error.message}</p>}
+        {mutation.isError && <p className="error-text">שגיאה: {mutation.error}</p>}
         {mutation.isSuccess && <p className="success-text">התחברות מוצלחת!</p>}
       </div>
     </div>

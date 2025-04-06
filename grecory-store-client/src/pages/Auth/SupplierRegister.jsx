@@ -33,34 +33,22 @@ const SupplierRegister = () => {
         });
     };
 
-    // useMutation לשליחת הנתונים ל-API
     const mutation = useMutation({
         mutationFn: registerSupplierApi,
         onSuccess: (response) => {
-            // Success callback - לאחר הרשמה מוצלחת
-            alert("Registration successful! Token: " + response.token);
-            localStorage.setItem("token", response.token); // שומר את הטוקן ב-localStorage
-            localStorage.setItem("role", "supplier"); // שומר את סוג המשתמש ב-localStorage
+            localStorage.setItem("token", response.token); 
+            localStorage.setItem("role", "supplier"); 
             window.location.href = "/ordersBySupplier";
-
         },
-        onError: (error) => {
-            alert("Error: " + error);
-        }
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrorMessage(""); // איפוס הודעת שגיאה
     
-        // בדיקה לשדות חובה כלליים
         const { companyName, phoneNumber, representativeName, password, products } = formData;
-    
         if (
-            !companyName.trim() ||
-            !phoneNumber.trim() ||
-            !representativeName.trim() ||
-            !password.trim()
+            !companyName||!phoneNumber||!representativeName||!password
         ) {
             setErrorMessage("אנא מלא את כל שדות ההרשמה.");
             return;
@@ -70,9 +58,7 @@ const SupplierRegister = () => {
         for (let i = 0; i < products.length; i++) {
             const product = products[i];
             if (
-                !product.name.trim() ||
-                !product.price.toString().trim() ||
-                !product.minQuantity.toString().trim()
+                !product.name||!product.price.toString() ||!product.minQuantity.toString()
             ) {
                 setErrorMessage(`אנא מלא את כל שדות המוצר בשורה ${i + 1}.`);
                 return;
@@ -80,7 +66,7 @@ const SupplierRegister = () => {
         }
     
         // בדיקה שאין שמות כפולים
-        const names = products.map(p => p.name.trim().toLowerCase());
+        const names = products.map(p => p.name);
         const hasDuplicates = names.some((name, index) => names.indexOf(name) !== index);
     
         if (hasDuplicates) {
@@ -88,7 +74,6 @@ const SupplierRegister = () => {
             return;
         }
     
-        // אם הכול תקין - שלח
         mutation.mutate(formData);
     };
     

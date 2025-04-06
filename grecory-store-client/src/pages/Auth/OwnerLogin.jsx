@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import "../../styles/SupplierLogin.css"// ייבוא קובץ CSS לעיצוב
-// import { Link } from "react-router-dom";
+import "../../styles/SupplierLogin.css"
 import { loginOwnerApi } from "../../api/ownerApi";
 import { useNavigate } from "react-router-dom";
 
@@ -12,22 +11,13 @@ const OwnerLogin = () => {
   });
   const navigate=useNavigate()
 
-  // useMutation עם useMutation של הגרסה החדשה
   const mutation = useMutation({
-    mutationFn: loginOwnerApi,  // כאן תכניס את הפונקציה שמבצעת את הקריאה ל-API
+    mutationFn: loginOwnerApi,  
     onSuccess: (response) => {
-      // Success callback - אחרי התחברות מוצלחת
-      alert("Login successful! Token: " + response.token);
       localStorage.setItem("token", response.token); // שומר את הטוקן ב-localStorage
       localStorage.setItem("role", "owner"); // שומר את סוג המשתמש ב-localStorag
       window.location.href = "/products";
-
-
     },
-    onError: (error) => {
-      // Error callback - אם יש טעות
-      alert("Error: " + error.message);
-    }
   });
 
   const handleSubmit = (e) => {
@@ -68,8 +58,7 @@ const OwnerLogin = () => {
           </button>
         </form>
 
-        {mutation.isLoading && <p className="loading-text">טוען...</p>}
-        {mutation.isError && <p className="error-text">שגיאה: {mutation.error.message}</p>}
+        {mutation.isError && <p className="error-text">שגיאה: {mutation.error}</p>}
         {mutation.isSuccess && <p className="success-text">התחברות מוצלחת!</p>}
       </div>
     </div>

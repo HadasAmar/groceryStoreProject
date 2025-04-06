@@ -40,8 +40,8 @@
     background: #f1f1f1;
 }
 
-.complete-btn {
-    background: #007bff;
+.complete-btn, .view-products-btn{
+    background-color: #248eff;;
     color: white;
     border: none;
     padding: 8px 12px;
@@ -50,9 +50,6 @@
     font-size: 14px;
 }
 
-.complete-btn:hover {
-    background: #218838;
-}
 
 .status-message {
     color: red;
@@ -61,4 +58,49 @@
     color: #333;
     text-align: center;
     margin-top: 10px;
+}
+
+.order-products-modal {
+    margin-top: 20px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: right;
+    direction: rtl;
+    max-width: 600px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.order-products-modal h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
+
+.order-products-modal ul {
+    list-style: none;
+    padding: 0;
+}
+
+.order-products-modal li {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    color: #444;
+}
+
+.order-products-modal button {
+    display: block;
+    margin: 20px auto 0;
+    padding: 8px 16px;
+    background-color: #007bff;;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
 }

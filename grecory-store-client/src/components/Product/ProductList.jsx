@@ -2,46 +2,48 @@ import { useState, useEffect } from "react";
 import { createOrderApi } from "../../api/orderApi";
 import { getSuppliersApi } from "../../api/supplierApi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import "../../styles/ProductList.css"; // ייבוא קובץ CSS לעיצוב
+import "../../styles/ProductList.css"; 
 import { useNavigate } from "react-router-dom";
 
 const ProductList = () => {
-    const queryClient = useQueryClient(); // קבלת ה-queryClient
     const [selectedSupplier, setSelectedSupplier] = useState("");
     const [products, setProducts] = useState([]);
     const [orderItems, setOrderItems] = useState([]);
     const [message, setMessage] = useState("");
 
-    const token = localStorage.getItem("token"); // קבלת הטוקן מה-localStorage
+    const token = localStorage.getItem("token"); 
     const navigate=useNavigate()
-        // אם אין טוקן, הפנה לדף ההתחברות
         useEffect(() => {
             if (!token) {
                 navigate("/OwnerLogin");
             }
         }, [token, navigate]);
-    // שימוש ב-useQuery כדי לקבל את הספקים
-    const { data: suppliers, error, isLoading } = useQuery({
+
+        const { data: suppliers, error, isLoading } = useQuery({
         queryKey: ['suppliers'],
         refetchOnWindowFocus: true,
         refetchInterval: 60000, 
         queryFn: () => {
                     const response = getSuppliersApi(token);
-                    console.log("what product owner", response); // בדוק את התגובה מה-API
                     return response;
                 },
-        enabled: !!token,
-
     });
 
     const handleSupplierChange = (e) => {
         const supplierId = e.target.value;
         setSelectedSupplier(supplierId);
-
-        // מוצאים את המוצרים של הספק הנבחר
+    
         const selectedSupplierObj = suppliers.find(s => s._id === supplierId);
-        setProducts(selectedSupplierObj ? selectedSupplierObj.products : []);
-        setOrderItems([]); // מאפסים בחירת מוצרים
+    
+        if (selectedSupplierObj && selectedSupplierObj.products.length > 0) {
+            setProducts(selectedSupplierObj.products);
+            setMessage("");
+        } else {
+            setProducts([]);
+            setMessage("לא נמצאו מוצרים לספק זה");
+        }
+    
+        setOrderItems([]); 
     };
 
     const handleAddProduct = (product) => {
@@ -49,15 +51,15 @@ const ProductList = () => {
             const existingItem = prevItems.find((item) => item.productId === product._id);
 
             if (existingItem) {
-                // אם המוצר כבר קיים, עדכן את הכמות
+                // אם המוצר כבר קיים, עדכון הכמות
                 return prevItems.map((item) =>
                     item.productId === product._id
                         ? { ...item, quantity: item.quantity + 1 }
                         : item
                 );
             } else {
-                // אם זה מוצר חדש, הוסף אותו לרשימה
-                return [...prevItems, { productId: product._id, quantity: 1 }];
+                // אם זה מוצר חדש, הוספה לרשימה
+                return [...prevItems, { productId: product._id, productName:product.name, quantity: 1 }];
             }
         });
     };
@@ -68,19 +70,16 @@ const ProductList = () => {
         setOrderItems(updatedItems);
     };
 
-    // שימוש ב-useMutation כדי לשלוח את ההזמנה
     const mutation = useMutation({
         mutationFn: createOrderApi,
-        onSuccess: () => {
-            queryClient.invalidateQueries(['storeOwnerOrders']); // מעדכן את רשימת ההזמנות של הספק
-            setMessage("הזמנה נוספה בהצלחה!");
-        },
+        
         onError: (error) => {
-            setMessage("שגיאה ביצירת ההזמנה: " + error.message);
+            setMessage("שגיאה ביצירת ההזמנה: " + error);
         }
     });
 
     const handleSubmit = async (e) => {
+        setMessage(""); // איפוס הודעת שגיאה קודמת
         e.preventDefault();
         if (!selectedSupplier || orderItems.length === 0) {
             setMessage("נא לבחור ספק ולהוסיף מוצרים להזמנה");
@@ -96,11 +95,10 @@ const ProductList = () => {
             const product = products.find(p => p._id === item.productId);
             if (product) {
                 console.log("product: " , product); // הוספת לוג
-                alert("product: " + product.quantity + " item: " + item.quantity); // הוספת לוג
                 if (item.quantity < product.minQuantity) {
                     setMessage("מינימום היחידות להזמנת  " +product.name+" הוא "+ product.minQuantity);
-                    hasError = true; // אם יש שגיאה, משנים את הדגל
-                    return; // יציאה מהפונקציה אם הכמות גבוהה מהמלאי
+                    hasError = true;
+                    return; 
                 }
             }
         });
@@ -112,12 +110,10 @@ const ProductList = () => {
         const orderData = { supplierId: selectedSupplier, supplierName: supplierName, items: orderItems };
 
         try {
-            console.log("Order data:", orderData); // הוספת לוג
-            console.log("Token in try:", token); // הוספת לוג
             await mutation.mutateAsync({ orderData, token }); // שליחה בעזרת useMutation
 
         } catch (error) {
-            setMessage("שגיאה ביצירת ההזמנה: " + error.message);
+            setMessage("שגיאה ביצירת ההזמנה: " + error);
         }
     };
 
@@ -127,6 +123,8 @@ const ProductList = () => {
     return (
         <div className="order-container">
             <h2 className="order-title">הוספת הזמנה</h2>
+            {mutation.isSuccess && <p className="success">ההזמנה נוספה בהצלחה!</p>}
+            {message && <p className="status-message">{message}</p>}
             <form className="order-form" onSubmit={handleSubmit}>
                 <label className="order-label">בחר ספק:</label>
                 <select
@@ -180,7 +178,6 @@ const ProductList = () => {
                 <button type="submit" className="btn-primary">📩 שלח הזמנה</button>
             </form>
 
-            {message && <p className="status-message">{message}</p>}
         </div>
     );
 

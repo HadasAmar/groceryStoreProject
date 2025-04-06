@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/products";  // כתובת ה-API שלך
+const API_URL = "http://localhost:8080/products";  
 
 // פונקציה לשליפת המוצרים הקיימים של הספק
 export const getProductsApi = async (token) => {
     try {
-        console.log("getProductsApi:", token); // הוספת לוג
+        console.log("getProductsApi:", token); 
         const response = await axios.get(`${API_URL}/getProducts`, {
             headers: { Authorization: `Bearer ${token}` }
         });

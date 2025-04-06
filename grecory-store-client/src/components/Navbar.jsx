@@ -8,25 +8,15 @@ const Navbar = () => {
   const [userRole, setRole] = useState(localStorage.getItem("role"));
   const navigate = useNavigate();
 
-  // כל פעם שה־token או ה־role משתנים, מעדכנים את ה־state
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedRole = localStorage.getItem("role");
-
-    setToken(storedToken);
-    setRole(storedRole);
-  }, []); // זה ירוץ רק פעם אחת כאשר הקומפוננטה נטענת, ואם 
   return (
     <nav style={{direction: "rtl"}} className="navbar">
       <ul>
-        {/* קישור להתחברות תמיד מוצג אם אין טוקן */}
         {!token && (
           <li>
             <Link to="/login">דף הבית</Link>
           </li>
         )}
 
-        {/* הצגת קישורים בהתאם לתפקיד המשתמש */}
         {token && (
           <>
             {userRole=="owner"&&(<li>

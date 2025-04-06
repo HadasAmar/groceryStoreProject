@@ -5,6 +5,7 @@ const orderSchema = new Schema({
     supplierName: { type: String, required: true },
     items: [{
         productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+        productName: { type: String, required: true }, // הוספת שם המוצר
         quantity: { type: Number, required: true }
     }],
     status: { type: String, enum: ["ממתינה", "בתהליך", "הושלמה"], default: "ממתינה" },

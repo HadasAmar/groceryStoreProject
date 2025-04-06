@@ -7,7 +7,7 @@ export const loginOwner = async (req, res) => {
     try {
         // בדיקה אם המשתמש הוא בעל החנות לפי הנתונים ב-.env
         if (name !== process.env.OWNER_NAME || password !== process.env.OWNER_PASSWORD) {
-            return res.status(400).json({ message: "Invalid credentials" });
+            return res.status(400).json({ message: "אחד הפרטים שגויים, נסה שוב" });
         }
 
         // יצירת טוקן עם תפקיד של בעל חנות

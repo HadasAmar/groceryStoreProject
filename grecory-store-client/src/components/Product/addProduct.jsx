@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { addProductApi, getProductsApi } from "../../api/productApi"; // פונקציות ה-API
 import { useNavigate } from "react-router-dom";
-import "../../styles/addProduct.css"; // ייבוא קובץ CSS לעיצוב
+import "../../styles/addProduct.css"; 
 
 const AddProduct = () => {
-    const queryClient = new QueryClient(); // יצירת מופע של QueryClient
+    const queryClient = new QueryClient(); 
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ const AddProduct = () => {
         price: "",
         minQuantity: ""
     });
-    const token = localStorage.getItem("token");  // הוצאת הטוקן
+    const token = localStorage.getItem("token"); 
 
 
     useEffect(() => {
@@ -25,17 +25,11 @@ const AddProduct = () => {
     }, [token, navigate]);
 
 
-    // שליחת ה-API להוספת מוצר חדש
     const mutation = useMutation({
         mutationFn: addProductApi,
         onSuccess: () => {
-            queryClient.invalidateQueries(['products']); // עדכון רשימת המוצרים
-            alert("המוצר נוסף בהצלחה!");
             refetch(); // עדכון המוצרים לאחר ההוספה
         },
-        onError: (error) => {
-            alert("שגיאה בהוספת המוצר: " + error.message);
-        }
     });
 
     // שליפת המוצרים הקיימים מה-API
@@ -43,20 +37,17 @@ const AddProduct = () => {
         queryKey: ['products'],
         staleTime: Infinity,
         queryFn: () => getProductsApi(token),
-        enabled: !!token  // הפעלת השאילתה רק אם יש טוקן
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrorMessage(""); // איפוס שגיאה קודמת
 
-        // בדיקה אם שדות ריקים
         if (!formData.name || !formData.price || !formData.minQuantity) {
             setErrorMessage("אנא מלא את כל השדות.");
             return;
         }
 
-        // בדיקה אם שם כבר קיים
         const isDuplicate = products.some(
             (product) => product.name === formData.name
         );
@@ -73,7 +64,7 @@ const AddProduct = () => {
 
 
     if (isLoading) return <p>טוען מוצרים...</p>;
-    if (error) return <p>שגיאה: {error.message}</p>;
+    if (error) return <p>שגיאה: {error}</p>;
 
     return (
         <div className="add-product-container">
