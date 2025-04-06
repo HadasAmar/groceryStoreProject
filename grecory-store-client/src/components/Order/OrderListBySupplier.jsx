@@ -1,16 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getOrdersBySupplierApi, updateOrderStatusApi } from "../../api/orderApi";
 import "../../styles/OrderListBySupplier.css";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-
 const SupplierOrders = () => {
-
     const [message, setMessage] = useState("");
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [filter, setFilter] = useState("all");
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
@@ -23,18 +21,18 @@ const SupplierOrders = () => {
 
     const decodedToken = jwtDecode(token);
     const supplierId = decodedToken._id;
+
     const { data: orders, error, isLoading, refetch } = useQuery({
         queryKey: ['orders', supplierId],
+        queryFn: () => getOrdersBySupplierApi(token),
         refetchInterval: 60000,
         refetchOnWindowFocus: true,
-        queryFn: () => {
-            const response = getOrdersBySupplierApi(token);
-            console.log("what orders", response);
-            return response;
-        },
         enabled: !!token,
     });
 
+    useEffect(() => {
+        refetch();
+    }, [filter]);
 
     const mutation = useMutation({
         mutationFn: updateOrderStatusApi,
@@ -49,13 +47,22 @@ const SupplierOrders = () => {
     const handleStartProcessingOrder = async (orderId, status) => {
         setMessage("");
         try {
-            // עדכון סטטוס ההזמנה
             await mutation.mutateAsync({ orderId, status, token });
         } catch (error) {
             setMessage("Error starting order processing: " + error.message);
         }
     };
 
+    // סינון ההזמנות
+    const filteredOrders = orders?.filter((order) => {
+        if (filter === "all") {
+            return true; // כל ההזמנות
+        }
+        if (filter === "completed") {
+            return order.status !== "הושלמה"; // רק הזמנות שהסטטוס שלהן לא הושלמו
+        }
+        return true;
+    });
 
     if (isLoading) return <p>Loading orders...</p>;
     if (error) return <p>Error fetching orders: {error.message}</p>;
@@ -63,12 +70,29 @@ const SupplierOrders = () => {
     return (
         <div className="orders-container">
             <h2 className="orders-title">הזמנות ספק</h2>
+
+            <div className="filter-buttons">
+                <button
+                    className={filter === "all" ? "active" : ""}
+                    onClick={() =>{setFilter("all"); setSelectedOrder(null)}} 
+                >
+                    כל ההזמנות
+                </button>
+                <button
+                    className={filter === "pending" ? "active" : ""}
+                    onClick={() => {setFilter("completed"); setSelectedOrder(null)}} 
+                >
+                    הזמנות בתהליך
+                </button>
+            </div>
+
             {mutation.isSuccess && <p className="success">הסטטוס עודכן בהצלחה!</p>}
             {message && <p className="status-message">{message}</p>}
+
             <table className="orders-table">
                 <thead>
                     <tr>
-                        <th> מזהה הזמנה</th>
+                        <th>מזהה הזמנה</th>
                         <th>תאריך</th>
                         <th>סטטוס</th>
                         <th>מוצרים</th>
@@ -76,23 +100,22 @@ const SupplierOrders = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {orders?.length === 0 ? (
+                    {filteredOrders?.length === 0 ? (
                         <tr>
                             <td colSpan="5" style={{ textAlign: "center", padding: "20px", color: "#666" }}>
                                 אין הזמנות להצגה בשלב זה.
                             </td>
                         </tr>
                     ) : (
-                        orders.map((order, index) => (
+                        filteredOrders.map((order, index) => (
                             <tr key={order._id}>
                                 <td>{index + 1}</td>
-                                <td>  {order.createdAt.split('T')[0]} {order.createdAt.split('T')[1].slice(0, 5)}</td>
+                                <td>{order.createdAt.split('T')[0]} {order.createdAt.split('T')[1].slice(0, 5)}</td>
                                 <td>{order.status}</td>
                                 <td>
                                     <button
                                         className="view-products-btn"
                                         onClick={() => setSelectedOrder(order)}
-                                        style={{ marginRight: "5px" }}
                                     >
                                         צפיה במוצרים
                                     </button>
@@ -111,8 +134,6 @@ const SupplierOrders = () => {
                         ))
                     )}
                 </tbody>
-
-
             </table>
 
             {selectedOrder && selectedOrder.items && selectedOrder.items.length > 0 && (
@@ -133,4 +154,5 @@ const SupplierOrders = () => {
         </div>
     );
 };
+
 export default SupplierOrders;

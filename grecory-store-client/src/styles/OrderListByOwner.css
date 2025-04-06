@@ -17,6 +17,34 @@
     text-align: center;
 }
 
+/* חדש - עיצוב טאבים */
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-buttons button {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-buttons button.active {
+    background-color: #248eff;
+    color: white;
+    font-weight: bold;
+}
+
+.filter-buttons button:hover {
+    background-color: #c6dfff;
+}
+
 .orders-table {
     width: 100%;
     border-collapse: collapse;
