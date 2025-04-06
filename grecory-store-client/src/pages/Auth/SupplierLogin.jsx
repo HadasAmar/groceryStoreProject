@@ -18,6 +18,7 @@ const SupplierLogin = () => {
       alert("Login successful! Token: " + response.token);
       localStorage.setItem("token", response.token); // שומר את הטוקן ב-localStorage
       localStorage.setItem("role", "supplier"); // שומר את סוג המשתמש ב-localStorage
+      window.location.href = "/ordersBySupplier";
 
       // הפנייה לדף אחר אחרי ההתחברות
       // navigate("/dashboard");
@@ -42,7 +43,7 @@ const SupplierLogin = () => {
           <div className="input-group">
             <label>מספר טלפון</label>
             <input
-              type="number"
+              type="text"
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}

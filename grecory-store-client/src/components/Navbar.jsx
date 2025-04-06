@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Navbar.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
+  
 const Navbar = () => {
-  const token = localStorage.getItem("token"); // בודק אם המשתמש מחובר
-  const userRole = localStorage.getItem("role"); // סוג המשתמש (supplier או owner)
-  const navigate = useNavigate(); // הפנייה לדף אחר
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [userRole, setRole] = useState(localStorage.getItem("role"));
+  const navigate = useNavigate();
 
+  // כל פעם שה־token או ה־role משתנים, מעדכנים את ה־state
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedRole = localStorage.getItem("role");
+
+    setToken(storedToken);
+    setRole(storedRole);
+  }, []); // זה ירוץ רק פעם אחת כאשר הקומפוננטה נטענת, ואם 
   return (
     <nav style={{direction: "rtl"}} className="navbar">
       <ul>

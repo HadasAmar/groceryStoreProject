@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 const SupplierRegister = () => {
 
     const navigate = useNavigate(); // ייבוא useNavigate מה-react-router-dom
+    const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState({
         companyName: "",
         phoneNumber: "",
@@ -40,7 +41,7 @@ const SupplierRegister = () => {
             alert("Registration successful! Token: " + response.token);
             localStorage.setItem("token", response.token); // שומר את הטוקן ב-localStorage
             localStorage.setItem("role", "supplier"); // שומר את סוג המשתמש ב-localStorage
-            navigate("/ordersBySupplier"); // הפנייה לדף ההתחברות
+            window.location.href = "/ordersBySupplier";
 
         },
         onError: (error) => {
@@ -50,13 +51,56 @@ const SupplierRegister = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        mutation.mutate(formData);  //
-    }
+        setErrorMessage(""); // איפוס הודעת שגיאה
+    
+        // בדיקה לשדות חובה כלליים
+        const { companyName, phoneNumber, representativeName, password, products } = formData;
+    
+        if (
+            !companyName.trim() ||
+            !phoneNumber.trim() ||
+            !representativeName.trim() ||
+            !password.trim()
+        ) {
+            setErrorMessage("אנא מלא את כל שדות ההרשמה.");
+            return;
+        }
+    
+        // בדיקה שאין מוצר ריק
+        for (let i = 0; i < products.length; i++) {
+            const product = products[i];
+            if (
+                !product.name.trim() ||
+                !product.price.toString().trim() ||
+                !product.minQuantity.toString().trim()
+            ) {
+                setErrorMessage(`אנא מלא את כל שדות המוצר בשורה ${i + 1}.`);
+                return;
+            }
+        }
+    
+        // בדיקה שאין שמות כפולים
+        const names = products.map(p => p.name.trim().toLowerCase());
+        const hasDuplicates = names.some((name, index) => names.indexOf(name) !== index);
+    
+        if (hasDuplicates) {
+            setErrorMessage("ישנם שמות מוצרים כפולים. אנא ודא שכל מוצר ייחודי.");
+            return;
+        }
+    
+        // אם הכול תקין - שלח
+        mutation.mutate(formData);
+    };
+    
 
     return (
         <div className="supplier-container">
             <form className="supplier-form" onSubmit={handleSubmit}>
                 <h2 className="supplier-title">הרשמה לספקים</h2>
+                {errorMessage && <p className="status-message error">{errorMessage}</p>}
+                {mutation.isLoading && <p className="status-message loading">טוען...</p>}
+                {mutation.isError && <p className="status-message error">שגיאה: {mutation.error}</p>}
+                {mutation.isSuccess && <p className="status-message success">הרשמה בוצעה בהצלחה!</p>}
                 <input
                     type="text"
                     name="phoneNumber"
@@ -119,9 +163,7 @@ const SupplierRegister = () => {
 
                 <button type="button" className="btn-add" onClick={addProduct}>➕ הוסף מוצר</button>
                 <button type="submit" className="btn-primary" disabled={mutation.isLoading}>הרשם</button>
-                {mutation.isLoading && <p className="status-message loading">טוען...</p>}
-                {mutation.isError && <p className="status-message error">שגיאה: {mutation.error}</p>}
-                {mutation.isSuccess && <p className="status-message success">הרשמה בוצעה בהצלחה!</p>}
+                
             </form>
 
 

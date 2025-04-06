@@ -3,12 +3,14 @@ import { useMutation } from "@tanstack/react-query";
 import "../../styles/SupplierLogin.css"// ייבוא קובץ CSS לעיצוב
 // import { Link } from "react-router-dom";
 import { loginOwnerApi } from "../../api/ownerApi";
+import { useNavigate } from "react-router-dom";
 
 const OwnerLogin = () => {
   const [formData, setFormData] = useState({
     name: "",
     password: ""
   });
+  const navigate=useNavigate()
 
   // useMutation עם useMutation של הגרסה החדשה
   const mutation = useMutation({
@@ -17,7 +19,9 @@ const OwnerLogin = () => {
       // Success callback - אחרי התחברות מוצלחת
       alert("Login successful! Token: " + response.token);
       localStorage.setItem("token", response.token); // שומר את הטוקן ב-localStorage
-      localStorage.setItem("role", "owner"); // שומר את סוג המשתמש ב-localStorage
+      localStorage.setItem("role", "owner"); // שומר את סוג המשתמש ב-localStorag
+      window.location.href = "/products";
+
 
     },
     onError: (error) => {

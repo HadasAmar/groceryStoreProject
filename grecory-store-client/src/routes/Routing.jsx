@@ -8,6 +8,7 @@ import SupplierRegister from "../pages/Auth/SupplierRegister";
 import SupplierLogin from "../pages/Auth/SupplierLogin";
 import OwnerLogin from "../pages/Auth/OwnerLogin";
 import AddProduct from "../components/Product/addProduct";
+import Navbar from "../components/Navbar";
 
 const Routing = () => {
     return (
@@ -21,6 +22,7 @@ const Routing = () => {
                 <Route path="/ordersByOwner" element={<OrderListByOwner />} />
                 <Route path="/products" element={<ProductList />} />
                 <Route path="/addProduct" element={<AddProduct />} />
+                <Route path="/navbar" element={<Navbar></Navbar>} />
             </Routes>
     );
 };

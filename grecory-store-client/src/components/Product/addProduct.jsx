@@ -7,6 +7,7 @@ import "../../styles/addProduct.css"; // ייבוא קובץ CSS לעיצוב
 const AddProduct = () => {
     const queryClient = new QueryClient(); // יצירת מופע של QueryClient
     const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState({
         name: "",
         price: "",
@@ -47,18 +48,40 @@ const AddProduct = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        mutation.mutate(formData);  // שליחה ל-API
+        setErrorMessage(""); // איפוס שגיאה קודמת
+
+        // בדיקה אם שדות ריקים
+        if (!formData.name || !formData.price || !formData.minQuantity) {
+            setErrorMessage("אנא מלא את כל השדות.");
+            return;
+        }
+
+        // בדיקה אם שם כבר קיים
+        const isDuplicate = products.some(
+            (product) => product.name === formData.name
+        );
+
+        if (isDuplicate) {
+            setErrorMessage("שם המוצר כבר קיים במערכת.");
+            return;
+        }
+
+        // אם הכול תקין - שלח
+        mutation.mutate(formData);
     };
+
+
 
     if (isLoading) return <p>טוען מוצרים...</p>;
     if (error) return <p>שגיאה: {error.message}</p>;
 
     return (
         <div className="add-product-container">
-            {mutation.isSuccess && <p>המוצר נוסף בהצלחה!</p>}
-            {mutation.isError && <p>שגיאה: {mutation.error.message}</p>}
-
+            
             <h2>הוספת מוצר</h2>
+            {mutation.isSuccess && <p className="success">המוצר נוסף בהצלחה!</p>}
+            {mutation.isError && <p className="error-message">שגיאה: {mutation.error.message}</p>}
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
             <form className="add-product-form" onSubmit={handleSubmit}>
                 <input
                     type="text"

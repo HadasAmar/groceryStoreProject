@@ -70,17 +70,17 @@ p {
     color: #007bff;
 }
 
-.add-product-form p.error {
+.error-message {
     color: #f44336;
 }
 
-.add-product-form p.success {
+.success {
     color: #4caf50;
 }
 
 /* עיצוב טבלה */
 table {
-    width: 60%;
+    width: 80%;
     margin: auto;
     margin-top: 30px;
     border-collapse: collapse;
