@@ -1,4 +1,5 @@
 import { Order } from "../models/Order.js";
+import { Stock } from "../models/Stock.js";
 
 // צפייה בהזמנות של ספק
 export const getOrdersBySupplier = async (req, res) => {
@@ -6,7 +7,7 @@ export const getOrdersBySupplier = async (req, res) => {
         const orders = await Order.find({ supplierId: req.user.id }) // מחפש רק הזמנות של הספק המחובר
         res.status(200).json(orders); // מחזיר את ההזמנות ללקוח
     } catch (error) {
-        res.status(500).json({ message: error.message }); 
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -31,15 +32,23 @@ export const createOrder = async (req, res) => {
         return res.status(400).json({ message: "ההזמנה חייבת לכלול מוצרים" });
     }
 
-    try { 
+    try {
         const newOrder = new Order({
             supplierId,
             supplierName,
             items,
-            status: "ממתינה",  // ברירת מחדל
+            status: "pending",  // ברירת מחדל
         });
 
         await newOrder.save();
+
+        for (const item of newOrder.items) {
+            const stockItem = await Stock.findOne({ name: item.productName });
+            if (stockItem) {
+                stockItem.quantity += item.quantity;
+                await stockItem.save();
+            }
+        }
 
         res.status(201).json(newOrder);
     } catch (error) {
@@ -55,7 +64,7 @@ export const completeOrder = async (req, res) => {
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
-        order.status = "הושלמה";
+        order.status = "completed"; // עדכון הסטטוס להזמנה הושלמה
         await order.save();
         res.status(200).json(order);
     } catch (error) {
@@ -68,8 +77,8 @@ export const confirmOrder = async (req, res) => {
     try {
         const order = await Order.findById(id);
         if (!order) return res.status(404).json({ message: "Order not found" });
-
-        order.status = "בתהליך";
+        console.log("order", order); // הוספת לוג
+        order.status = "in process"; // עדכון הסטטוס להזמנה בתהליך
         await order.save();
         res.status(200).json(order);
     } catch (error) {

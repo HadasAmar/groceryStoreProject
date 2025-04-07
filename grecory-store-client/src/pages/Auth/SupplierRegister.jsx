@@ -81,15 +81,15 @@ const SupplierRegister = () => {
     return (
         <div className="supplier-container">
             <form className="supplier-form" onSubmit={handleSubmit}>
-                <h2 className="supplier-title">הרשמה לספקים</h2>
+                <h2 className="supplier-title">Supplier registration</h2>
                 {errorMessage && <p className="status-message error">{errorMessage}</p>}
-                {mutation.isLoading && <p className="status-message loading">טוען...</p>}
-                {mutation.isError && <p className="status-message error">שגיאה: {mutation.error}</p>}
-                {mutation.isSuccess && <p className="status-message success">הרשמה בוצעה בהצלחה!</p>}
+                {mutation.isLoading && <p className="status-message loading">loading...</p>}
+                {mutation.isError && <p className="status-message error">Error: {mutation.error}</p>}
+                {mutation.isSuccess && <p className="status-message success">Registration successful!</p>}
                 <input
                     type="text"
                     name="phoneNumber"
-                    placeholder="מספר טלפון"
+                    placeholder="phone number"
                     value={formData.phoneNumber}
                     onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
                     required
@@ -97,7 +97,7 @@ const SupplierRegister = () => {
                 <input
                     type="text"
                     name="representativeName"
-                    placeholder="שם נציג"
+                    placeholder="representative name"
                     value={formData.representativeName}
                     onChange={(e) => setFormData({ ...formData, representativeName: e.target.value })}
                     required
@@ -105,7 +105,7 @@ const SupplierRegister = () => {
                 <input
                     type="password"
                     name="password"
-                    placeholder="סיסמה"
+                    placeholder="password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
@@ -113,32 +113,32 @@ const SupplierRegister = () => {
                 <input
                     type="text"
                     name="companyName"
-                    placeholder="שם החברה"
+                    placeholder="company name"
                     value={formData.companyName}
                     onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                     required
                 />
 
-                <h3 className="products-title">מוצרים</h3>
+                <h3 className="products-title">products</h3>
                 {formData.products.map((product, index) => (
                     <div key={index} className="product-group">
                         <input
                             type="text"
-                            placeholder="שם המוצר"
+                            placeholder="product name"
                             value={product.name}
                             onChange={(e) => handleProductChange(index, "name", e.target.value)}
                             required
                         />
                         <input
                             type="number"
-                            placeholder="מחיר"
+                            placeholder="price"
                             value={product.price}
                             onChange={(e) => handleProductChange(index, "price", e.target.value)}
                             required
                         />
                         <input
                             type="number"
-                            placeholder="כמות מינימלית"
+                            placeholder="minimum quantity"
                             value={product.minQuantity}
                             onChange={(e) => handleProductChange(index, "minQuantity", e.target.value)}
                             required
@@ -146,8 +146,8 @@ const SupplierRegister = () => {
                     </div>
                 ))}
 
-                <button type="button" className="btn-add" onClick={addProduct}>➕ הוסף מוצר</button>
-                <button type="submit" className="btn-primary" disabled={mutation.isLoading}>הרשם</button>
+                <button type="button" className="btn-add" onClick={addProduct}>➕ Add product</button>
+                <button type="submit" className="btn-primary" disabled={mutation.isLoading}>Reguster</button>
                 
             </form>
 

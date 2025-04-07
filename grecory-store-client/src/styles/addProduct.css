@@ -1,7 +1,6 @@
 
 /* קונטיינר כללי לדף */
 .add-product-container {
-    direction: rtl;
     width: 80%;
     max-width: 1200px;
     margin: 40px auto;

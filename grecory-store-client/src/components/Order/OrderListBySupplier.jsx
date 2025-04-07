@@ -40,7 +40,7 @@ const SupplierOrders = () => {
             refetch();
         },
         onError: (error) => {
-            setMessage("שגיאה בעדכון הסטטוס: " + error.message);
+            setMessage("Error updating the status:" + error.message);
         }
     });
 
@@ -59,7 +59,7 @@ const SupplierOrders = () => {
             return true; // כל ההזמנות
         }
         if (filter === "completed") {
-            return order.status !== "הושלמה"; // רק הזמנות שהסטטוס שלהן לא הושלמו
+            return order.status !== "completed"; // רק הזמנות שהסטטוס שלהן לא הושלמו
         }
         return true;
     });
@@ -69,41 +69,41 @@ const SupplierOrders = () => {
 
     return (
         <div className="orders-container">
-            <h2 className="orders-title">הזמנות ספק</h2>
+            <h2 className="orders-title">Supplier orders</h2>
 
             <div className="filter-buttons">
                 <button
                     className={filter === "all" ? "active" : ""}
                     onClick={() =>{setFilter("all"); setSelectedOrder(null)}} 
                 >
-                    כל ההזמנות
+                    All orders
                 </button>
                 <button
                     className={filter === "pending" ? "active" : ""}
                     onClick={() => {setFilter("completed"); setSelectedOrder(null)}} 
                 >
-                    הזמנות בתהליך
+                    Orders in process
                 </button>
             </div>
 
-            {mutation.isSuccess && <p className="success">הסטטוס עודכן בהצלחה!</p>}
+            {mutation.isSuccess && <p className="success">The status has been updated successfully!</p>}
             {message && <p className="status-message">{message}</p>}
 
             <table className="orders-table">
                 <thead>
                     <tr>
-                        <th>מזהה הזמנה</th>
-                        <th>תאריך</th>
-                        <th>סטטוס</th>
-                        <th>מוצרים</th>
-                        <th>פעולות</th>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Products</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {filteredOrders?.length === 0 ? (
                         <tr>
                             <td colSpan="5" style={{ textAlign: "center", padding: "20px", color: "#666" }}>
-                                אין הזמנות להצגה בשלב זה.
+                            There are no orders to display
                             </td>
                         </tr>
                     ) : (
@@ -117,16 +117,16 @@ const SupplierOrders = () => {
                                         className="view-products-btn"
                                         onClick={() => setSelectedOrder(order)}
                                     >
-                                        צפיה במוצרים
+                                        View products
                                     </button>
                                 </td>
                                 <td>
-                                    {order.status === "ממתינה" && (
+                                    {order.status === "pending" && (
                                         <button
                                             className="complete-btn"
-                                            onClick={() => handleStartProcessingOrder(order._id, "בתהליך")}
+                                            onClick={() => handleStartProcessingOrder(order._id, "in process")}
                                         >
-                                            התחל תהליך
+                                            Start process
                                         </button>
                                     )}
                                 </td>
@@ -139,15 +139,15 @@ const SupplierOrders = () => {
             {selectedOrder && selectedOrder.items && selectedOrder.items.length > 0 && (
                 <div className="modal-overlay" onClick={() => setSelectedOrder(null)}>
                     <div className="order-products-modal" onClick={(e) => e.stopPropagation()}>
-                        <h3>מוצרים בהזמנה</h3>
+                        <h3>Products on order</h3>
                         <ul>
                             {selectedOrder.items.map((item, index) => (
                                 <li key={index}>
-                                    {item.productName} - {item.quantity}
+                                    {item.productName} - {item.quantity} quantities
                                 </li>
                             ))}
                         </ul>
-                        <button onClick={() => setSelectedOrder(null)}>סגור</button>
+                        <button onClick={() => setSelectedOrder(null)}>close</button>
                     </div>
                 </div>
             )}

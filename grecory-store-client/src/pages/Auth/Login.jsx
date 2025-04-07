@@ -6,20 +6,19 @@ const Login = () => {
   
   return (
     <div className="login-container">
-      <h2 className="login-title" style={{fontSize:"35px"}} >ברוכים הבאים לניהול המכולת</h2>
+      <h2 className="login-title" style={{fontSize:"35px"}} >Welcome to Grocery Management</h2>
       <div className="login-buttons">
         <button
           className="login-button storeOwner"
           onClick={() => navigate("/OwnerLogin")}
         >
-          כניסת בעל מכולת
+          Grocery Owner Login
         </button>
         <button
           className="login-button supplier"
           onClick={() => navigate("/SupplierLogin")}
         >
-          כניסת ספק
-        </button>
+          Supplier login        </button>
       </div>
     </div>
   );

@@ -5,7 +5,6 @@
     background: #f8f8f8;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    direction: rtl;
     text-align: right;
 }
 
@@ -19,6 +18,8 @@
 .order-form {
     display: flex;
     flex-direction: column;
+    direction: ltr;
+
 }
 
 .order-label {

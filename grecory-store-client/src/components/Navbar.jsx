@@ -9,32 +9,32 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <nav style={{direction: "rtl"}} className="navbar">
+    <nav className="navbar">
       <ul>
         {!token && (
           <li>
-            <Link to="/login">דף הבית</Link>
+            <Link to="/login"> homePage</Link>
           </li>
         )}
 
         {token && (
           <>
             {userRole=="owner"&&(<li>
-              <Link to="/products">הזמנת סחורה</Link>
+              <Link to="/products"> add order</Link>
             </li>)}
             {userRole === "supplier" && (
               <li>
-                <Link to="/ordersBySupplier">הזמנות של ספק</Link>
+                <Link to="/ordersBySupplier">orders</Link>
               </li>
             )}
             {userRole === "supplier" && (
               <li>
-                <Link to="/addProduct">הוספת מוצר</Link>
+                <Link to="/addProduct"> add product</Link>
               </li>
             )}
             {userRole === "owner" && (
               <li>
-                <Link to="/ordersByOwner">הזמנות של מכולת</Link>
+                <Link to="/ordersByOwner">orders</Link>
               </li>
             )}
             <li>
@@ -44,7 +44,7 @@ const Navbar = () => {
                 navigate("/login"); 
                 // הפנייה לדף ההתחברות
               }}>
-                התנתקות
+                Logout
               </button>
             </li>
           </>

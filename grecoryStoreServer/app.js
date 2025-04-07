@@ -6,6 +6,7 @@ import supplierRoute from './routes/supplierRoute.js'
 import productRoute from './routes/productRoute.js'
 import orderRoute from './routes/orderRoute.js'
 import ownerRoute from './routes/ownerRoute.js'
+import stockRoute from './routes/stockRoute.js'
 
 
 dotenv.config(); 
@@ -33,3 +34,4 @@ app.use('/suppliers', supplierRoute);
 app.use('/products', productRoute);
 app.use('/orders', orderRoute);
 app.use('/owner', ownerRoute);
+app.use('/stocks', stockRoute);

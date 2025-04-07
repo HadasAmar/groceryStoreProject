@@ -33,7 +33,7 @@ const StoreOwnerOrders = () => {
             refetch();
         },
         onError: (error) => {
-            setMessage("שגיאה בעדכון הסטטוס: " + error.message);
+            setMessage("Error updating the status: " + error.message);
         }
     });
 
@@ -56,25 +56,25 @@ const StoreOwnerOrders = () => {
 
     return (
         <div className="orders-container">
-            <h2 className="orders-title">הזמנות בעל המכולת</h2>
-            {mutation.isSuccess && <p className="success">הסטטוס עודכן בהצלחה!</p>}
+            <h2 className="orders-title">Store owner orders</h2>
+            {mutation.isSuccess && <p className="success">The status has been updated successfully!</p>}
             {message && <p className="status-message">{message}</p>}
             <table className="orders-table">
                 <thead>
                     <tr>
-                        <th>מספר הזמנה</th>
-                        <th>ספק</th>
-                        <th>תאריך</th>
-                        <th>סטטוס</th>
-                        <th>מוצרים</th>
-                        <th>פעולות</th>
+                        <th>ID </th>
+                        <th>Supplier</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Products</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {orders?.length === 0 ? (
                         <tr>
                             <td colSpan="6" style={{ textAlign: "center", padding: "20px", color: "#666" }}>
-                                אין הזמנות להצגה בשלב זה.
+                            There are no orders to display
                             </td>
                         </tr>
                     ) : (
@@ -89,16 +89,16 @@ const StoreOwnerOrders = () => {
                                         className="view-products-btn"
                                         onClick={() => handleViewProducts(order._id)}
                                     >
-                                        צפיה במוצרים
+                                       View products
                                     </button>
                                 </td>
                                 <td>
-                                    {order.status === "בתהליך" && (
+                                    {order.status === "in process" && (
                                         <button
                                             className="complete-btn"
-                                            onClick={() => handleCompleteOrder(order._id, "הושלמה", order.supplierId)}
+                                            onClick={() => handleCompleteOrder(order._id, "copleted", order.supplierId)}
                                         >
-                                            השלם הזמנה
+                                           coplete order
                                         </button>
                                     )}
                                 </td>
@@ -110,15 +110,15 @@ const StoreOwnerOrders = () => {
 
             {selectedOrder && selectedOrder.items && selectedOrder.items.length > 0 && (
                 <div className="order-products-modal">
-                    <h3>מוצרים בהזמנה</h3>
+                    <h3>Products on order</h3>
                     <ul>
                         {selectedOrder.items.map((item, index) => (
                             <li key={index}>
-                                {item.productName} - {item.quantity} יחידות
+                                {item.productName} - {item.quantity} quantities
                             </li>
                         ))}
                     </ul>
-                    <button onClick={() => setSelectedOrder(null)}>סגור</button>
+                    <button onClick={() => setSelectedOrder(null)}>close</button>
                 </div>
             )}
 

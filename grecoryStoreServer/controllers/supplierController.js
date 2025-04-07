@@ -1,5 +1,4 @@
 import { Supplier } from "../models/Supplier.js";
-import { Order } from "../models/Order.js";
 import jwt from "jsonwebtoken";
 
 export const registerSupplier = async (req, res) => {

@@ -8,7 +8,7 @@ const orderSchema = new Schema({
         productName: { type: String, required: true }, // הוספת שם המוצר
         quantity: { type: Number, required: true }
     }],
-    status: { type: String, enum: ["ממתינה", "בתהליך", "הושלמה"], default: "ממתינה" },
+    status: { type: String, enum: ["pending", "in process", "completed"], default: "pending" },
     createdAt: { type: Date, default: Date.now }
 });
 export const Order = model("Order", orderSchema);

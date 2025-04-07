@@ -74,7 +74,7 @@ const ProductList = () => {
         mutationFn: createOrderApi,
         
         onError: (error) => {
-            setMessage("שגיאה ביצירת ההזמנה: " + error);
+            setMessage("Error " + error);
         }
     });
 
@@ -82,7 +82,7 @@ const ProductList = () => {
         setMessage(""); // איפוס הודעת שגיאה קודמת
         e.preventDefault();
         if (!selectedSupplier || orderItems.length === 0) {
-            setMessage("נא לבחור ספק ולהוסיף מוצרים להזמנה");
+            setMessage("Please select a supplier and add products to the order");
             return;
         }
 
@@ -96,7 +96,7 @@ const ProductList = () => {
             if (product) {
                 console.log("product: " , product); // הוספת לוג
                 if (item.quantity < product.minQuantity) {
-                    setMessage("מינימום היחידות להזמנת  " +product.name+" הוא "+ product.minQuantity);
+                    setMessage("The minimum units to order for " + product.name + " is " + product.minQuantity);
                     hasError = true;
                     return; 
                 }
@@ -113,7 +113,7 @@ const ProductList = () => {
             await mutation.mutateAsync({ orderData, token }); // שליחה בעזרת useMutation
 
         } catch (error) {
-            setMessage("שגיאה ביצירת ההזמנה: " + error);
+            setMessage("Error: " + error);
         }
     };
 
@@ -122,18 +122,18 @@ const ProductList = () => {
 
     return (
         <div className="order-container">
-            <h2 className="order-title">הוספת הזמנה</h2>
-            {mutation.isSuccess && <p className="success">ההזמנה נוספה בהצלחה!</p>}
+            <h2 className="order-title">add order</h2>
+            {mutation.isSuccess && <p className="success">The order has been successfully added!</p>}
             {message && <p className="status-message">{message}</p>}
             <form className="order-form" onSubmit={handleSubmit}>
-                <label className="order-label">בחר ספק:</label>
+                <label style={{textAlign:"left"}} className="order-label">Select supplier</label>
                 <select
                     className="order-select"
                     value={selectedSupplier}
                     onChange={handleSupplierChange}
                     required
                 >
-                    <option value="">בחר ספק</option>
+                    <option value="">select supplier</option>
                     {suppliers?.map(supplier => (
                         <option key={supplier._id} value={supplier._id}>
                             {supplier.companyName}
@@ -141,7 +141,7 @@ const ProductList = () => {
                     ))}
                 </select>
 
-                <h3 className="products-title">מוצרים זמינים</h3>
+                <h3 className="products-title">available products</h3>
                 <div className="available-products">
                     {products.map(product => (
                         <div key={product._id} className="product-item">
@@ -151,13 +151,13 @@ const ProductList = () => {
                                 className="btn-add"
                                 onClick={() => handleAddProduct(product)}
                             >
-                                ➕ הוסף
+                                ➕ add
                             </button>
                         </div>
                     ))}
                 </div>
 
-                <h3 className="order-details-title">פרטי ההזמנה</h3>
+                <h3 className="order-details-title">Order details</h3>
                 <div className="order-items">
                     {orderItems.map((item, index) => (
                         <div key={index} className="order-item">

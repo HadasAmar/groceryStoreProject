@@ -63,13 +63,13 @@ const AddProduct = () => {
 
 
 
-    if (isLoading) return <p>טוען מוצרים...</p>;
-    if (error) return <p>שגיאה: {error}</p>;
+    if (isLoading) return <p>Loading products...</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <div className="add-product-container">
             
-            <h2>הוספת מוצר</h2>
+            <h2>Add product</h2>
             {mutation.isSuccess && <p className="success">המוצר נוסף בהצלחה!</p>}
             {mutation.isError && <p className="error-message">שגיאה: {mutation.error.message}</p>}
             {errorMessage && <p className="error-message">{errorMessage}</p>}
@@ -77,7 +77,7 @@ const AddProduct = () => {
                 <input
                     type="text"
                     name="name"
-                    placeholder="שם המוצר"
+                    placeholder="product name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
@@ -85,7 +85,7 @@ const AddProduct = () => {
                 <input
                     type="number"
                     name="price"
-                    placeholder="מחיר"
+                    placeholder="price"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                     required
@@ -93,7 +93,7 @@ const AddProduct = () => {
                 <input
                     type="number"
                     name="minQuantity"
-                    placeholder="כמות מינימלית"
+                    placeholder="minimum quantity"
                     value={formData.minQuantity}
                     onChange={(e) => setFormData({ ...formData, minQuantity: e.target.value })}
                     required
@@ -102,13 +102,13 @@ const AddProduct = () => {
 
             </form>
 
-            <h3>המוצרים הקיימים שלך:</h3>
+            <h3>Your existing products:</h3>
             <table>
                 <thead>
                     <tr>
-                        <th>שם המוצר</th>
-                        <th>מחיר</th>
-                        <th>כמות מינימלית</th>
+                        <th>product name</th>
+                        <th>price</th>
+                        <th>minimum quantity</th>
                     </tr>
                 </thead>
                 <tbody>

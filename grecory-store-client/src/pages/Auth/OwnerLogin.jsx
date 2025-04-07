@@ -28,11 +28,11 @@ const OwnerLogin = () => {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h2 className="login-title">התחברות בעל המכולת</h2>
+        <h2 className="login-title">Store owner login</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label>שם בעל המכולת</label>
+            <label>name</label>
             <input
               type="text"
               name="name"
@@ -43,7 +43,7 @@ const OwnerLogin = () => {
           </div>
 
           <div className="input-group">
-            <label>סיסמה</label>
+            <label>password</label>
             <input
               type="password"
               name="password"
@@ -54,12 +54,12 @@ const OwnerLogin = () => {
           </div>
 
           <button type="submit" className="login2-button" disabled={mutation.isLoading}>
-            התחבר
+          Login
           </button>
         </form>
 
-        {mutation.isError && <p className="error-text">שגיאה: {mutation.error}</p>}
-        {mutation.isSuccess && <p className="success-text">התחברות מוצלחת!</p>}
+        {mutation.isError && <p className="error-text">Error: {mutation.error}</p>}
+        {mutation.isSuccess && <p className="success-text">Successful login!!</p>}
       </div>
     </div>
   );

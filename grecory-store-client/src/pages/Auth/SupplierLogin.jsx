@@ -27,11 +27,11 @@ const SupplierLogin = () => {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h2 className="login-title">התחברות ספקים</h2>
+        <h2 className="login-title"> Supplier login</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label>מספר טלפון</label>
+            <label>phoneNumber</label>
             <input
               type="text"
               name="phoneNumber"
@@ -42,7 +42,7 @@ const SupplierLogin = () => {
           </div>
 
           <div className="input-group">
-            <label>סיסמה</label>
+            <label>password</label>
             <input
               type="password"
               name="password"
@@ -53,14 +53,14 @@ const SupplierLogin = () => {
           </div>
 
           <button type="submit" className="login2-button" disabled={mutation.isLoading}>
-            התחבר
+          Login
           </button>
 
-          <Link className="to-register" to="/SupplierRegister"> עדיין לא רשום? הרשם כאן</Link>
+          <Link className="to-register" to="/SupplierRegister"> Not registered yet? Register here</Link>
         </form>
 
-        {mutation.isError && <p className="error-text">שגיאה: {mutation.error}</p>}
-        {mutation.isSuccess && <p className="success-text">התחברות מוצלחת!</p>}
+        {mutation.isError && <p className="error-text">Error: {mutation.error}</p>}
+        {mutation.isSuccess && <p className="success-text"> Successful login!</p>}
       </div>
     </div>
   );
