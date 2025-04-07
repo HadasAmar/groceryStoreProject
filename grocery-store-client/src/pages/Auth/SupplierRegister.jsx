@@ -50,7 +50,7 @@ const SupplierRegister = () => {
         if (
             !companyName||!phoneNumber||!representativeName||!password
         ) {
-            setErrorMessage("אנא מלא את כל שדות ההרשמה.");
+            setErrorMessage("Please fill in all the registration fields");
             return;
         }
     
@@ -60,7 +60,7 @@ const SupplierRegister = () => {
             if (
                 !product.name||!product.price.toString() ||!product.minQuantity.toString()
             ) {
-                setErrorMessage(`אנא מלא את כל שדות המוצר בשורה ${i + 1}.`);
+                setErrorMessage(`Please fill in all the product fields in row ${i + 1}.`);
                 return;
             }
         }
@@ -70,7 +70,7 @@ const SupplierRegister = () => {
         const hasDuplicates = names.some((name, index) => names.indexOf(name) !== index);
     
         if (hasDuplicates) {
-            setErrorMessage("ישנם שמות מוצרים כפולים. אנא ודא שכל מוצר ייחודי.");
+            setErrorMessage("There are duplicate product names, Please ensure that each product is unique");
             return;
         }
     

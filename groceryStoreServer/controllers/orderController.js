@@ -29,7 +29,7 @@ export const createOrder = async (req, res) => {
     const { supplierId, supplierName, items } = req.body;
 
     if (!items || items.length === 0) {
-        return res.status(400).json({ message: "ההזמנה חייבת לכלול מוצרים" });
+        return res.status(400).json({ message: "The order must include products" });
     }
 
     try {

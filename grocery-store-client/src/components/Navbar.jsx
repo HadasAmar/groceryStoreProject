@@ -41,7 +41,9 @@ const Navbar = () => {
               <button className="logout-btn" onClick={() => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("role");
-                navigate("/login"); 
+                window.location.href = "/login";
+
+                // navigate("/login"); 
                 // הפנייה לדף ההתחברות
               }}>
                 Logout

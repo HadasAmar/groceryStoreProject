@@ -42,9 +42,10 @@ const AddProduct = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrorMessage(""); // איפוס שגיאה קודמת
+        mutation.reset();
 
         if (!formData.name || !formData.price || !formData.minQuantity) {
-            setErrorMessage("אנא מלא את כל השדות.");
+            setErrorMessage("Please fill in all the fields");
             return;
         }
 
@@ -53,12 +54,17 @@ const AddProduct = () => {
         );
 
         if (isDuplicate) {
-            setErrorMessage("שם המוצר כבר קיים במערכת.");
+            setErrorMessage("The product name already exists in the system");
             return;
         }
 
         // אם הכול תקין - שלח
         mutation.mutate(formData);
+        setFormData({
+            name: "",
+            price: "",
+            minQuantity: ""
+        });
     };
 
 
@@ -70,8 +76,8 @@ const AddProduct = () => {
         <div className="add-product-container">
             
             <h2>Add product</h2>
-            {mutation.isSuccess && <p className="success">המוצר נוסף בהצלחה!</p>}
-            {mutation.isError && <p className="error-message">שגיאה: {mutation.error.message}</p>}
+            {mutation.isSuccess && <p className="success">The product was added successfully!</p>}
+            {mutation.isError && <p className="error-message">Error: {mutation.error.message}</p>}
             {errorMessage && <p className="error-message">{errorMessage}</p>}
             <form className="add-product-form" onSubmit={handleSubmit}>
                 <input

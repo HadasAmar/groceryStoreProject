@@ -21,7 +21,7 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
@@ -79,7 +79,7 @@ p {
 
 /* עיצוב טבלה */
 table {
-    width: 80%;
+    width: 60%;
     margin: auto;
     margin-top: 30px;
     border-collapse: collapse;

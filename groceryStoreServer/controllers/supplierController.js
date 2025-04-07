@@ -8,7 +8,7 @@ export const registerSupplier = async (req, res) => {
     const { companyName, phoneNumber, representativeName, password, products } = req.body;
     const existingSupplier = await Supplier.findOne({ phoneNumber });
     if (existingSupplier) {
-        return res.status(400).json({ message: "מספר הטלפון כבר רשום במערכת" });
+        return res.status(400).json({ message: "The phone number is already registered in the system" });
     }
 
     try {
@@ -38,7 +38,7 @@ export const loginSupplier = async (req, res) => {
     try {
         const supplier = await Supplier.findOne({ phoneNumber });
         if (!supplier || supplier.password !== password) {
-            return res.status(400).json({ message: "אחד הפרטים שגויים, נסה שוב" });
+            return res.status(400).json({ message: "One of the details is incorrect, please try again" });
         }
         const token = jwt.sign({ id: supplier._id, role: "supplier" }, process.env.JWT_SECRET, { expiresIn: "24h" });
         res.status(200).json({ token });
