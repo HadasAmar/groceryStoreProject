@@ -3,6 +3,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8080/orders"; 
 
+// function to get all orders by supplier id
 export const getOrdersBySupplierApi = async (token) => {
     console.log("token", token); 
     try {
@@ -17,7 +18,7 @@ export const getOrdersBySupplierApi = async (token) => {
     }
 };
 
-// פונקציה לקבלת הזמנות של בעל מכולת
+// function to get all orders by store owner
 export const getOrdersByStoreOwnerApi = async (token) => {
     try {
         console.log("getOrdersByStoreOwnerApi:", token); 
@@ -31,11 +32,10 @@ export const getOrdersByStoreOwnerApi = async (token) => {
     }
 };
 
-// פונקציה ליצירת הזמנה חדשה
+// function to create a new order
 export const createOrderApi = async ({ orderData, token }) => {
     try {
-        console.log("token",token); // הוספת לוג
-        console.log("orderData", orderData); // הוספת לוג
+        console.log("token",token); 
         const response = await axios.post(`${API_URL}/newOrder`,
             orderData,
             {
@@ -46,33 +46,32 @@ export const createOrderApi = async ({ orderData, token }) => {
         );
         return response.data;
     } catch (error) {
-        console.error("Error creating order:", error); // הוספת לוג
         throw error; 
     };
 }
 
-// פונקציה לעדכון סטטוס ההזמנה של ספק
+// function to update the order status by supplier
 export const updateOrderStatusApi = async ({orderId, status, token}) => {
     try {
-        console.log("orderId:", orderId, "status:", status, "token:", token); // הוספת לוג
+        console.log("orderId:", orderId, "status:", status, "token:", token); 
         const response = await axios.put(
             `${API_URL}/confirm/${orderId}`,
             { status }, 
             {
                 headers: {
-                    Authorization: `Bearer ${token}` // הוספת הטוקן לכותרת
+                    Authorization: `Bearer ${token}` 
                 }
             }
         );
         return response.data; 
     } catch (error) {
-        console.error("שגיאה בעדכון סטטוס ההזמנה:", error); 
+        console.error("an error in update order status", error); 
         throw error; 
     }
 };
 
 
-// פונקציה לעדכון סטטוס הזמנה של בעל מכולת לאחר קבלת סחורה
+// function to update the order status by store owner
 export const completeOrderApi = async ({orderId, status, token}) => {
     try {
         console.log("Completing order:", orderId, "token:", token);

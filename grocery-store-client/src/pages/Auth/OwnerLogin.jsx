@@ -9,27 +9,29 @@ const OwnerLogin = () => {
     name: "",
     password: ""
   });
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   const mutation = useMutation({
-    mutationFn: loginOwnerApi,  
+    mutationFn: loginOwnerApi,
     onSuccess: (response) => {
-      localStorage.setItem("token", response.token); // שומר את הטוקן ב-localStorage
-      localStorage.setItem("role", "owner"); // שומר את סוג המשתמש ב-localStorag
+      //save the token and role in local storage
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("role", "owner");
       window.location.href = "/products";
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutation.mutate(formData); // שולח את הנתונים ל-API
+    mutation.mutate(formData); // call loginOwnerApi with form data
   };
 
   return (
     <div className="login-container">
       <div className="login-card">
         <h2 className="login-title">Store owner login</h2>
-
+        {mutation.isError && <p className="error-text">Error: {mutation.error}</p>}
+        {mutation.isSuccess && <p className="success-text">Successful login!!</p>}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label>name</label>
@@ -54,12 +56,11 @@ const OwnerLogin = () => {
           </div>
 
           <button type="submit" className="login2-button" disabled={mutation.isLoading}>
-          Login
+            Login
           </button>
         </form>
 
-        {mutation.isError && <p className="error-text">Error: {mutation.error}</p>}
-        {mutation.isSuccess && <p className="success-text">Successful login!!</p>}
+
       </div>
     </div>
   );

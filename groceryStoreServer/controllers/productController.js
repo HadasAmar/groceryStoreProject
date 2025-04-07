@@ -1,12 +1,11 @@
 import { Supplier } from "../models/Supplier.js";
 
-// פונקציה להוספת מוצר חדש לספק
+//adding a product to the supplier's products array
 export const addProduct = async (req, res) => {
-    console.log("Adding product..."); // הוספת לוג
+    console.log("Adding product..."); 
     try {
         console.log("req",req)
         const supplier = await Supplier.findById(req.user.id);
-        console.log("supplier",supplier); // הוספת לוג
 
         if (!supplier) {
             return res.status(404).json({ message: "Supplier not found" });
@@ -20,19 +19,18 @@ export const addProduct = async (req, res) => {
             minQuantity
         };
 
-        // הוספת המוצר למערך המוצרים של הספק
         supplier.products.push(newProduct);
 
         await supplier.save();
 
         res.status(201).json({ message: "Product added successfully", product: newProduct });
     } catch (error) {
-        res.status(500).json({ message: error.message }); // במקרה של שגיאה
+        res.status(500).json({ message: error.message }); 
     }
 };
 
 
-// צפייה במוצרים של ספק מסוים
+//view all products of the supplier
 export const getProducts = async (req, res) => {
 
     try {

@@ -12,6 +12,7 @@ const ProductList = () => {
     const [message, setMessage] = useState("");
 
     const token = localStorage.getItem("token"); 
+    // go to the login page if the token is not exist
     const navigate=useNavigate()
         useEffect(() => {
             if (!token) {
@@ -26,9 +27,10 @@ const ProductList = () => {
         queryFn: () => {
                     const response = getSuppliersApi(token);
                     return response;
-                },
+        },
     });
 
+    //loading products of the selected supplier
     const handleSupplierChange = (e) => {
         const supplierId = e.target.value;
         setSelectedSupplier(supplierId);
@@ -46,24 +48,26 @@ const ProductList = () => {
         setOrderItems([]); 
     };
 
+    //adding product to the order
     const handleAddProduct = (product) => {
         setOrderItems((prevItems) => {
             const existingItem = prevItems.find((item) => item.productId === product._id);
 
             if (existingItem) {
-                // אם המוצר כבר קיים, עדכון הכמות
+                //if the product already exists in the order, increase the quantity
                 return prevItems.map((item) =>
                     item.productId === product._id
                         ? { ...item, quantity: item.quantity + 1 }
                         : item
                 );
             } else {
-                // אם זה מוצר חדש, הוספה לרשימה
+                //if the product is new, add it to the order with quantity 1
                 return [...prevItems, { productId: product._id, productName:product.name, quantity: 1 }];
             }
         });
     };
 
+    //updating the quantity of the product in the order
     const handleQuantityChange = (index, value) => {
         const updatedItems = [...orderItems];
         updatedItems[index].quantity = value;
@@ -72,14 +76,13 @@ const ProductList = () => {
 
     const mutation = useMutation({
         mutationFn: createOrderApi,
-        
         onError: (error) => {
             setMessage("Error " + error);
         }
     });
 
     const handleSubmit = async (e) => {
-        setMessage(""); // איפוס הודעת שגיאה קודמת
+        setMessage(""); //reset previous message
         e.preventDefault();
         if (!selectedSupplier || orderItems.length === 0) {
             setMessage("Please select a supplier and add products to the order");
@@ -88,13 +91,12 @@ const ProductList = () => {
 
         const selectedSupplierObj = suppliers.find(s => s._id === selectedSupplier);
         const supplierName = selectedSupplierObj ? selectedSupplierObj.companyName : "";
-        let hasError = false; // דגל שגיאה
+        let hasError = false; // check if there is an error in the quantity
 
-        // בודקים את כל המוצרים בהזמנה
+        // check if the quantity is less than the minimum quantity
         orderItems.map(item => {
             const product = products.find(p => p._id === item.productId);
             if (product) {
-                console.log("product: " , product); // הוספת לוג
                 if (item.quantity < product.minQuantity) {
                     setMessage("The minimum units to order for " + product.name + " is " + product.minQuantity);
                     hasError = true;
@@ -103,14 +105,14 @@ const ProductList = () => {
             }
         });
     
-        // אם יש שגיאה, לא שולחים את ההזמנה
+        // if there is an error, do not send the order
         if (hasError) {
             return;
         }
         const orderData = { supplierId: selectedSupplier, supplierName: supplierName, items: orderItems };
 
         try {
-            await mutation.mutateAsync({ orderData, token }); // שליחה בעזרת useMutation
+            await mutation.mutateAsync({ orderData, token }); // send the order
 
         } catch (error) {
             setMessage("Error: " + error);
@@ -174,8 +176,7 @@ const ProductList = () => {
                         </div>
                     ))}
                 </div>
-
-                <button type="submit" className="btn-primary">📩 שלח הזמנה</button>
+                <button type="submit" className="btn-primary">📩 send order</button>
             </form>
 
         </div>

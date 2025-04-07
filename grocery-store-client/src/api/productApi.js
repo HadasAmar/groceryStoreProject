@@ -2,21 +2,21 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8080/products";  
 
-// פונקציה לשליפת המוצרים הקיימים של הספק
+// function to get products of the supplier
 export const getProductsApi = async (token) => {
     try {
         console.log("getProductsApi:", token); 
         const response = await axios.get(`${API_URL}/getProducts`, {
             headers: { Authorization: `Bearer ${token}` }
         });
-        console.log("after getProductsApi:", response); // הוספת לוג
-        return response.data;  // מחזיר את רשימת המוצרים
+        console.log("after getProductsApi:", response);
+        return response.data;  
     } catch (error) {
-        throw new Error(error.response?.data?.message || "שגיאה בטעינת המוצרים");
+        throw new Error(error.response?.data?.message || "error in loading products");
     }
 };
 
-// פונקציה להוספת מוצר חדש
+// function to add a new product
 export const addProductApi = async (productData) => {
     try {
         const token = localStorage.getItem("token");

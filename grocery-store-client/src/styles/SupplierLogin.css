@@ -3,12 +3,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 150px); /* 70px זה גובה ה-Navbar, שנה בהתאם */
+    height: calc(100vh - 150px);
     background-color: #f8f9fa;
-    padding-top: 20px; /* קצת רווח אם צריך */
+    padding-top: 20px; 
 }
 
-/* כרטיס התחברות */
 .login-card {
     background: white;
     padding: 30px;
@@ -18,7 +17,6 @@
     text-align: center;
 }
 
-/* כותרת */
 .login-title {
     font-size: 22px;
     font-weight: bold;
@@ -26,7 +24,6 @@
     margin-bottom: 20px;
 }
 
-/* קבוצה של תווית וקלט */
 .input-group {
     text-align: right;
     margin-bottom: 15px;
@@ -54,7 +51,6 @@
     outline: none;
 }
 
-/* כפתור התחברות */
 .login2-button {
     width: 100%;
     padding: 12px;
@@ -78,7 +74,6 @@
     cursor: not-allowed;
 }
 
-/* טקסט טעינה ושגיאות */
 .loading-text {
     margin-top: 10px;
     font-size: 14px;

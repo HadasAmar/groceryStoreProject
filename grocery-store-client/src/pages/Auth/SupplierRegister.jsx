@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { registerSupplierApi } from "../../api/supplierApi";
 
-import "../../styles/SupplierRegister.css"// ייבוא קובץ CSS לעיצוב
+import "../../styles/SupplierRegister.css"
 import { useNavigate } from "react-router-dom";
 
 
 const SupplierRegister = () => {
 
-    const navigate = useNavigate(); // ייבוא useNavigate מה-react-router-dom
+    const navigate = useNavigate(); 
     const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState({
         companyName: "",
@@ -18,14 +18,14 @@ const SupplierRegister = () => {
         products: []
     });
 
-    // שינוי מוצר בודד ברשימה
+    // add field to the formData
     const handleProductChange = (index, field, value) => {
         const updatedProducts = [...formData.products];
         updatedProducts[index][field] = value;
         setFormData({ ...formData, products: updatedProducts });
     };
 
-    // הוספת מוצר חדש
+    // add product to the formData
     const addProduct = () => {
         setFormData({
             ...formData,
@@ -44,28 +44,26 @@ const SupplierRegister = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setErrorMessage(""); // איפוס הודעת שגיאה
+        setErrorMessage(""); // reset previous error
     
         const { companyName, phoneNumber, representativeName, password, products } = formData;
-        if (
-            !companyName||!phoneNumber||!representativeName||!password
-        ) {
+        if (!companyName||!phoneNumber||!representativeName||!password) 
+        {
             setErrorMessage("Please fill in all the registration fields");
             return;
         }
     
-        // בדיקה שאין מוצר ריק
+        // check if products is empty
         for (let i = 0; i < products.length; i++) {
             const product = products[i];
-            if (
-                !product.name||!product.price.toString() ||!product.minQuantity.toString()
-            ) {
+            if (!product.name||!product.price.toString() ||!product.minQuantity.toString()) 
+            {
                 setErrorMessage(`Please fill in all the product fields in row ${i + 1}.`);
                 return;
             }
         }
     
-        // בדיקה שאין שמות כפולים
+        // check if there are duplicate product names
         const names = products.map(p => p.name);
         const hasDuplicates = names.some((name, index) => names.indexOf(name) !== index);
     
@@ -74,7 +72,7 @@ const SupplierRegister = () => {
             return;
         }
     
-        mutation.mutate(formData);
+        mutation.mutate(formData);// call registerSupplierApi with form data
     };
     
 

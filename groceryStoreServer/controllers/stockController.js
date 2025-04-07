@@ -6,7 +6,7 @@ import { Order } from "../models/Order.js";
 export const handleStockData = async (req, res) => {
     console.log("Handling stock data...");
     const purchase = req.body;
-    console.log("purchase", purchase); // הוספת לוג
+    console.log("purchase", purchase);
 
     try {
         const autoOrderedProductNames = [];
@@ -31,13 +31,14 @@ export const handleStockData = async (req, res) => {
                     "products.name": productName
                 });
 
-                console.log("suppliers", suppliers); // הוספת לוג
 
+                //if there is no supplier for the product
                 if (suppliers.length === 0) {
                     console.log(`⚠️ No supplier found with the product: ${productName}`);
                     continue;
                 }
 
+                //searching for the cheapest supplier
                 let bestOption = null;
                 for (const supplier of suppliers) {
                     const product = supplier.products.find(p => p.name === productName);
@@ -55,6 +56,7 @@ export const handleStockData = async (req, res) => {
                     }
                 }
 
+                //create an order for the cheapest supplier
                 if (bestOption) {
                     const neededQuantity = stockItem.minQuantity - stockItem.quantity;
                     const orderQuantity = Math.max(neededQuantity, bestOption.minQuantity);
@@ -72,19 +74,16 @@ export const handleStockData = async (req, res) => {
                     await newOrder.save();
                     autoOrderedProductNames.push(bestOption.productName);
 
-                    // עדכון המלאי של כל מוצר בהזמנה
-                    for (const item of newOrder.items) {
-                        const stockItem = await Stock.findOne({ name: item.productName });
-                        if (stockItem) {
-                            stockItem.quantity += item.quantity;
-                            await stockItem.save();
-                        }
-                    }
+                    //update the stock item quantity
+                    const item = newOrder.items[0];
+                    const stockItem = await Stock.findOne({ name: item.productName });
+                    stockItem.quantity += item.quantity;
+                    await stockItem.save();
                 }
             }
         }
 
-        res.status(200).json({ message: "Cash register data processed successfully", autoOrderedProductNames});
+        res.status(200).json({ message: "Cash register data processed successfully", autoOrderedProductNames });
     } catch (error) {
         console.error("Error processing purchases:", error);
         res.status(500).json({ message: "Error processing cash register data" });

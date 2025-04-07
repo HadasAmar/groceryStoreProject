@@ -39,12 +39,10 @@ const Navbar = () => {
             )}
             <li>
               <button className="logout-btn" onClick={() => {
+                // remove the token and role from local storage
                 localStorage.removeItem("token");
                 localStorage.removeItem("role");
                 window.location.href = "/login";
-
-                // navigate("/login"); 
-                // הפנייה לדף ההתחברות
               }}>
                 Logout
               </button>

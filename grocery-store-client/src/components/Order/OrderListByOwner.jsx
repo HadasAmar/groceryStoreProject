@@ -11,7 +11,7 @@ const StoreOwnerOrders = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
-    // אם אין טוקן, הפנה לדף ההתחברות
+    // if the token is not exist, go to the login page
     useEffect(() => {
         if (!token) {
             navigate("/OwnerLogin");
@@ -27,9 +27,8 @@ const StoreOwnerOrders = () => {
     });
 
     const mutation = useMutation({
-        mutationFn: completeOrderApi, // עדכון הסטטוס
-        onSuccess: (_, variables) => {
-            const supplierId = variables;
+        mutationFn: completeOrderApi, // update the order status
+        onSuccess: () => {
             refetch();
         },
         onError: (error) => {
@@ -37,15 +36,17 @@ const StoreOwnerOrders = () => {
         }
     });
 
+    //
     const handleCompleteOrder = async (orderId, status) => {
         setMessage("");
         try {
-            await mutation.mutateAsync({ orderId, status, token });
+            await mutation.mutateAsync({ orderId, status, token });// call the API to update the order status
         } catch (error) {
             setMessage("Error completing order: " + error);
         }
     };
 
+    // view the products in the order
     const handleViewProducts = (orderId) => {
         const order = orders.find(order => order._id === orderId);
         setSelectedOrder(order);

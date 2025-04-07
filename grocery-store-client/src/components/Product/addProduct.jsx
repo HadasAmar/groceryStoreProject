@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { addProductApi, getProductsApi } from "../../api/productApi"; // פונקציות ה-API
 import { useNavigate } from "react-router-dom";
-import "../../styles/addProduct.css"; 
+import "../../styles/addProduct.css";
 
 const AddProduct = () => {
-    const queryClient = new QueryClient(); 
+    const queryClient = new QueryClient();
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState({
@@ -13,9 +13,9 @@ const AddProduct = () => {
         price: "",
         minQuantity: ""
     });
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
 
-
+    // go to the login page if the token is not exist
     useEffect(() => {
         console.log("❤️")
 
@@ -28,11 +28,11 @@ const AddProduct = () => {
     const mutation = useMutation({
         mutationFn: addProductApi,
         onSuccess: () => {
-            refetch(); // עדכון המוצרים לאחר ההוספה
+            refetch(); // update the product list after adding a new product
         },
     });
 
-    // שליפת המוצרים הקיימים מה-API
+    // get the products list
     const { data: products, isLoading, error, refetch } = useQuery({
         queryKey: ['products'],
         staleTime: Infinity,
@@ -41,14 +41,15 @@ const AddProduct = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setErrorMessage(""); // איפוס שגיאה קודמת
-        mutation.reset();
+        setErrorMessage(""); // reset previous error
+        mutation.reset();// reset the mutation state
 
         if (!formData.name || !formData.price || !formData.minQuantity) {
             setErrorMessage("Please fill in all the fields");
             return;
         }
 
+        // check if the product name already exists
         const isDuplicate = products.some(
             (product) => product.name === formData.name
         );
@@ -58,8 +59,7 @@ const AddProduct = () => {
             return;
         }
 
-        // אם הכול תקין - שלח
-        mutation.mutate(formData);
+        mutation.mutate(formData);// call addProductApi with form data
         setFormData({
             name: "",
             price: "",
@@ -74,7 +74,7 @@ const AddProduct = () => {
 
     return (
         <div className="add-product-container">
-            
+
             <h2>Add product</h2>
             {mutation.isSuccess && <p className="success">The product was added successfully!</p>}
             {mutation.isError && <p className="error-message">Error: {mutation.error.message}</p>}

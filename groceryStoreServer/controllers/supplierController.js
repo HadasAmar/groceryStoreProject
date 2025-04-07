@@ -1,6 +1,7 @@
 import { Supplier } from "../models/Supplier.js";
 import jwt from "jsonwebtoken";
 
+//new supplier registration
 export const registerSupplier = async (req, res) => {
     console.log("Registering supplier...");
     console.log(req.body);
@@ -23,6 +24,7 @@ export const registerSupplier = async (req, res) => {
 
         await newSupplier.save();
 
+        //create a token for the new supplier
         const token = jwt.sign({ id: newSupplier._id, role: "supplier" }, process.env.JWT_SECRET, { expiresIn: "24h" });
         res.status(201).json({ token });
 
@@ -32,7 +34,7 @@ export const registerSupplier = async (req, res) => {
 };
 
 
-// התחברות ספק קיים
+// login supplier
 export const loginSupplier = async (req, res) => {
     const { phoneNumber, password } = req.body;
     try {
@@ -47,6 +49,7 @@ export const loginSupplier = async (req, res) => {
     }
 };
 
+//get all suppliers
 export const getSupplier = async (req, res) => {
     try {
         console.log("Getting suppliers...");

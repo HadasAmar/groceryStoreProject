@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getOrdersBySupplierApi, updateOrderStatusApi } from "../../api/orderApi";
-import "../../styles/OrderListBySupplier.css";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
@@ -12,7 +11,7 @@ const SupplierOrders = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
-    // אם אין טוקן, הפנה לדף ההתחברות
+    // go to the login page if the token is not exist
     useEffect(() => {
         if (!token) {
             navigate("/SupplierLogin");
@@ -23,7 +22,7 @@ const SupplierOrders = () => {
     const supplierId = decodedToken._id;
 
     const { data: orders, error, isLoading, refetch } = useQuery({
-        queryKey: ['orders', supplierId],
+        queryKey: ['orders', supplierId],//get the orders by supplier id
         queryFn: () => getOrdersBySupplierApi(token),
         refetchInterval: 60000,
         refetchOnWindowFocus: true,
@@ -47,19 +46,19 @@ const SupplierOrders = () => {
     const handleStartProcessingOrder = async (orderId, status) => {
         setMessage("");
         try {
-            await mutation.mutateAsync({ orderId, status, token });
+            await mutation.mutateAsync({ orderId, status, token });// call the API to update the order status
         } catch (error) {
             setMessage("Error starting order processing: " + error.message);
         }
     };
 
-    // סינון ההזמנות
+    // filter the orders based on the selected filter
     const filteredOrders = orders?.filter((order) => {
         if (filter === "all") {
-            return true; // כל ההזמנות
+            return true; // all orders
         }
         if (filter === "completed") {
-            return order.status !== "completed"; // רק הזמנות שהסטטוס שלהן לא הושלמו
+            return order.status !== "completed"; // just orders that are not completed
         }
         return true;
     });
