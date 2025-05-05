@@ -12,7 +12,6 @@ export const handleStockData = async (req, res) => {
         const autoOrderedProductNames = [];
 
         for (const [productName, quantitySold] of Object.entries(purchase)) {
-            const allStock = await Stock.find({});
             const stockItem = await Stock.findOne({ name: productName });
             if (!stockItem) {
                 console.log(`⚠️ Product does not exist: ${productName}`);
@@ -76,9 +75,9 @@ export const handleStockData = async (req, res) => {
 
                     //update the stock item quantity
                     const item = newOrder.items[0];
-                    const stockItem = await Stock.findOne({ name: item.productName });
-                    stockItem.quantity += item.quantity;
-                    await stockItem.save();
+                    const newstockItem = await Stock.findOne({ name: item.productName });
+                    newstockItem.quantity += item.quantity;
+                    await newstockItem.save();
                 }
             }
         }

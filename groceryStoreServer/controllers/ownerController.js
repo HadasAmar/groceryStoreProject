@@ -1,4 +1,3 @@
-import { reactHooksModuleName } from "@reduxjs/toolkit/query/react";
 import jwt from "jsonwebtoken";
 
 // login owner
