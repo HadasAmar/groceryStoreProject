@@ -20,7 +20,7 @@ const StoreOwnerOrders = () => {
 
     const { data: orders, error, isLoading, refetch } = useQuery({
         queryKey: ['storeOwnerOrders'],
-        refetchInterval: 60000,
+        staleTime: 120000,
         refetchOnWindowFocus: true,
         queryFn: () => getOrdersByStoreOwnerApi(token),
         enabled: !!token,

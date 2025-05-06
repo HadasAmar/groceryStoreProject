@@ -24,7 +24,7 @@ const SupplierOrders = () => {
     const { data: orders, error, isLoading, refetch } = useQuery({
         queryKey: ['orders', supplierId],//get the orders by supplier id
         queryFn: () => getOrdersBySupplierApi(token),
-        refetchInterval: 60000,
+        staleTime: 120000,
         refetchOnWindowFocus: true,
         enabled: !!token,
     });

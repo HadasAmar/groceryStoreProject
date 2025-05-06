@@ -84,11 +84,14 @@ project-root/
 │   ├── controllers/
 │   ├── models/
 │   ├── middleware/
-│   └── index.js
+│   └── App.js
 ├── grocery-store-client/  # Client (React)
+│   ├── api/
 │   ├── components/
 │   ├── pages/
-│   └── App.js
+│   ├── routes/
+│   ├── styles/
+│   └── app.js
 └── .env
 ```
 

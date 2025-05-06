@@ -35,7 +35,8 @@ const AddProduct = () => {
     // get the products list
     const { data: products, isLoading, error, refetch } = useQuery({
         queryKey: ['products'],
-        staleTime: Infinity,
+        staleTime: 120000,
+        refetchOnWindowFocus: true,
         queryFn: () => getProductsApi(token),
     });
 

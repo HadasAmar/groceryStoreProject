@@ -23,10 +23,10 @@ const ProductList = () => {
         const { data: suppliers, error, isLoading } = useQuery({
         queryKey: ['suppliers'],
         refetchOnWindowFocus: true,
-        refetchInterval: 60000, 
+        staleTime: 120000,
         queryFn: () => {
-                    const response = getSuppliersApi(token);
-                    return response;
+                const response = getSuppliersApi(token);
+                return response;
         },
     });
 
